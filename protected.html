@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>メンバーページ</title>
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/1.19/auth0-spa-js.production.js"></script>
+</head>
+<body>
+  <h1>🔒 メンバーページ</h1>
+  <div id="content" style="display: none;">
+    <p id="user-info"></p>
+    <button onclick="logout()">ログアウト</button>
+  </div>
+
+  <script type="module">
+    const auth0 = await createAuth0Client({
+      domain: "YOUR_AUTH0_DOMAIN",
+      client_id: "YOUR_CLIENT_ID",
+      redirect_uri: window.location.origin + "/protected.html"
+    });
+
+    if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
+      await auth0.handleRedirectCallback();
+      window.history.replaceState({}, document.title, "/protected.html");
+    }
+
+    const isAuthenticated = await auth0.isAuthenticated();
+    if (!isAuthenticated) {
+      await auth0.loginWithRedirect();
+    } else {
+      const user = await auth0.getUser();
+      document.getElementById("user-info").textContent = `${user.name || user.email} としてログイン中です`;
+      document.getElementById("content").style.display = "block";
+    }
+
+    window.logout = () => {
+      auth0.logout({ returnTo: window.location.origin });
+    };
+  </script>
+</body>
+</html>

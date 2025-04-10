@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ランディングページ</title>
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/1.19/auth0-spa-js.production.js"></script>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 100px; }
+    button { padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>🚀 サンプル ランディングページ</h1>
+  <p>ここは誰でも見られる公開ページです。</p>
+  <button id="login-btn">メンバーページにログイン</button>
+
+  <script type="module">
+    const auth0 = await createAuth0Client({
+      domain: "YOUR_AUTH0_DOMAIN",
+      client_id: "YOUR_CLIENT_ID",
+      redirect_uri: window.location.origin + "/protected.html"
+    });
+
+    document.getElementById("login-btn").addEventListener("click", async () => {
+      await auth0.loginWithRedirect();
+    });
+  </script>
+</body>
+</html>
